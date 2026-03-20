@@ -12,9 +12,6 @@ WP_APP_PASSWORD = os.environ["WP_APP_PASSWORD"]
 UNSPLASH_ACCESS_KEY = os.environ["UNSPLASH_ACCESS_KEY"]
 
 TOPICS = [
-    # Index 0, 1: Samsung
-    {"en": "Samsung Electronics", "ko": "삼성전자", "ticker": "005930.KS", "category": "Tech"},
-    {"en": "Samsung SDI", "ko": "삼성SDI", "ticker": "006400.KS", "category": "Stocks"},
     # Semiconductors & Tech
     {"en": "SK Hynix", "ko": "SK하이닉스", "ticker": "000660.KS", "category": "Tech"},
     {"en": "Kakao", "ko": "카카오", "ticker": "035720.KS", "category": "Tech"},
@@ -35,6 +32,8 @@ TOPICS = [
     {"en": "Kia Corporation", "ko": "기아", "ticker": "000270.KS", "category": "Stocks"},
     {"en": "Hyundai Mobis", "ko": "현대모비스", "ticker": "012330.KS", "category": "Stocks"},
     {"en": "Hyundai Glovis", "ko": "현대글로비스", "ticker": "086280.KS", "category": "Stocks"},
+    {"en": "Samsung Electronics", "ko": "삼성전자", "ticker": "005930.KS", "category": "Tech"},
+    {"en": "Samsung SDI", "ko": "삼성SDI", "ticker": "006400.KS", "category": "Stocks"},
     {"en": "Hyundai Rotem", "ko": "현대로템", "ticker": "064350.KS", "category": "Stocks"},
     # Materials & Heavy Industry
     {"en": "POSCO Holdings", "ko": "POSCO홀딩스", "ticker": "005490.KS", "category": "Stocks"},
@@ -213,23 +212,41 @@ def get_or_create_category(name: str) -> int | None:
     return None
 
 
+def make_img_html(media: dict) -> str:
+    return (
+        f'<figure class="wp-block-image">'
+        f'<img src="{media["url"]}" alt="{media["alt"]}" />'
+        f'<figcaption>Photo by {media["photographer"]} on Unsplash</figcaption>'
+        f'</figure>'
+    )
+
+
 def inject_images_into_content(content: str, media_list: list) -> str:
-    # Insert images before each <h2> tag (up to len(media_list) times)
-    for i, media in enumerate(media_list):
-        img_html = (
-            f'<figure class="wp-block-image">'
-            f'<img src="{media["url"]}" alt="{media["alt"]}" />'
-            f'<figcaption>Photo by {media["photographer"]} on Unsplash</figcaption>'
-            f'</figure>'
-        )
-        # Find the (i+1)-th <h2>
+    if not media_list:
+        return content
+
+    # Insert first image before first <h2>
+    if len(media_list) >= 1:
+        pos = content.find("<h2>")
+        if pos != -1:
+            content = content[:pos] + make_img_html(media_list[0]) + content[pos:]
+
+    # Insert second image before second <h2>
+    if len(media_list) >= 2:
         pos = -1
-        for _ in range(i + 1):
+        for _ in range(2):
             pos = content.find("<h2>", pos + 1)
             if pos == -1:
                 break
         if pos != -1:
-            content = content[:pos] + img_html + content[pos:]
+            content = content[:pos] + make_img_html(media_list[1]) + content[pos:]
+
+    # Insert third image before the last <p>
+    if len(media_list) >= 3:
+        pos = content.rfind("<p>")
+        if pos != -1:
+            content = content[:pos] + make_img_html(media_list[2]) + content[pos:]
+
     return content
 
 
@@ -237,7 +254,7 @@ def publish_post(post: dict, topic: dict):
     tag_ids = get_or_create_tags(post["tags"])
 
     # Fetch images from Unsplash
-    images = fetch_unsplash_images(topic["en"], count=3)
+    images = fetch_unsplash_images(topic["en"], count=4)
     featured_media_id = None
     content = post["content"]
 
