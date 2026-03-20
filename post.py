@@ -93,7 +93,8 @@ def fetch_unsplash_image(query: str) -> dict | None:
 
 def upload_image_to_wp(image: dict, title: str) -> int | None:
     img_data = requests.get(image["url"]).content
-    filename = title.lower().replace(" ", "-")[:50] + ".jpg"
+    import re
+    filename = re.sub(r"[^a-z0-9-]", "", title.lower().replace(" ", "-"))[:50] + ".jpg"
     res = requests.post(
         "https://stockithub.com/wp-json/wp/v2/media",
         auth=(WP_USERNAME, WP_APP_PASSWORD),
