@@ -80,6 +80,7 @@ def fetch_unsplash_image(query: str) -> dict | None:
         params={"query": query, "per_page": 1, "orientation": "landscape"},
         headers={"Authorization": f"Client-ID {UNSPLASH_ACCESS_KEY}"},
     )
+    print(f"Unsplash status: {res.status_code}, body: {res.text[:200]}")
     if res.status_code != 200 or not res.json()["results"]:
         return None
     photo = res.json()["results"][0]
