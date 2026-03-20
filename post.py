@@ -12,24 +12,82 @@ WP_APP_PASSWORD = os.environ["WP_APP_PASSWORD"]
 UNSPLASH_ACCESS_KEY = os.environ["UNSPLASH_ACCESS_KEY"]
 
 TOPICS = [
-    {"en": "Samsung Electronics", "ko": "삼성전자", "ticker": "005930.KS"},
-    {"en": "SK Hynix", "ko": "SK하이닉스", "ticker": "000660.KS"},
-    {"en": "LG Energy Solution", "ko": "LG에너지솔루션", "ticker": "373220.KS"},
-    {"en": "Samsung SDI", "ko": "삼성SDI", "ticker": "006400.KS"},
-    {"en": "POSCO Holdings", "ko": "POSCO홀딩스", "ticker": "005490.KS"},
-    {"en": "Hyundai Motor", "ko": "현대자동차", "ticker": "005380.KS"},
-    {"en": "Kia Corporation", "ko": "기아", "ticker": "000270.KS"},
-    {"en": "Kakao", "ko": "카카오", "ticker": "035720.KS"},
-    {"en": "Naver", "ko": "NAVER", "ticker": "035420.KS"},
-    {"en": "Samsung Biologics", "ko": "삼성바이오로직스", "ticker": "207940.KS"},
-    {"en": "Celltrion", "ko": "셀트리온", "ticker": "068270.KS"},
-    {"en": "KB Financial Group", "ko": "KB금융", "ticker": "105560.KS"},
-    {"en": "Shinhan Financial Group", "ko": "신한지주", "ticker": "055550.KS"},
-    {"en": "Hanwha Aerospace", "ko": "한화에어로스페이스", "ticker": "012450.KS"},
-    {"en": "LG Chem", "ko": "LG화학", "ticker": "051910.KS"},
-    {"en": "SK Innovation", "ko": "SK이노베이션", "ticker": "096770.KS"},
-    {"en": "Krafton", "ko": "크래프톤", "ticker": "259960.KS"},
-    {"en": "HD Hyundai Heavy Industries", "ko": "HD현대중공업", "ticker": "329180.KS"},
+    # Index 0, 1: Samsung
+    {"en": "Samsung Electronics", "ko": "삼성전자", "ticker": "005930.KS", "category": "Tech"},
+    {"en": "Samsung SDI", "ko": "삼성SDI", "ticker": "006400.KS", "category": "Stocks"},
+    # Semiconductors & Tech
+    {"en": "SK Hynix", "ko": "SK하이닉스", "ticker": "000660.KS", "category": "Tech"},
+    {"en": "Kakao", "ko": "카카오", "ticker": "035720.KS", "category": "Tech"},
+    {"en": "Naver", "ko": "NAVER", "ticker": "035420.KS", "category": "Tech"},
+    {"en": "Krafton", "ko": "크래프톤", "ticker": "259960.KS", "category": "Tech"},
+    {"en": "LG Electronics", "ko": "LG전자", "ticker": "066570.KS", "category": "Tech"},
+    {"en": "SK Telecom", "ko": "SK텔레콤", "ticker": "017670.KS", "category": "Tech"},
+    {"en": "KT", "ko": "KT", "ticker": "030200.KS", "category": "Tech"},
+    {"en": "Samsung Engineering", "ko": "삼성엔지니어링", "ticker": "028050.KS", "category": "Tech"},
+    {"en": "DB HiTek", "ko": "DB하이텍", "ticker": "000990.KS", "category": "Tech"},
+    # Battery & EV
+    {"en": "LG Energy Solution", "ko": "LG에너지솔루션", "ticker": "373220.KS", "category": "Stocks"},
+    {"en": "SK Innovation", "ko": "SK이노베이션", "ticker": "096770.KS", "category": "Stocks"},
+    {"en": "LG Chem", "ko": "LG화학", "ticker": "051910.KS", "category": "Stocks"},
+    {"en": "Hanwha Solutions", "ko": "한화솔루션", "ticker": "009830.KS", "category": "Stocks"},
+    # Automotive
+    {"en": "Hyundai Motor", "ko": "현대자동차", "ticker": "005380.KS", "category": "Stocks"},
+    {"en": "Kia Corporation", "ko": "기아", "ticker": "000270.KS", "category": "Stocks"},
+    {"en": "Hyundai Mobis", "ko": "현대모비스", "ticker": "012330.KS", "category": "Stocks"},
+    {"en": "Hyundai Glovis", "ko": "현대글로비스", "ticker": "086280.KS", "category": "Stocks"},
+    {"en": "Hyundai Rotem", "ko": "현대로템", "ticker": "064350.KS", "category": "Stocks"},
+    # Materials & Heavy Industry
+    {"en": "POSCO Holdings", "ko": "POSCO홀딩스", "ticker": "005490.KS", "category": "Stocks"},
+    {"en": "HD Hyundai Heavy Industries", "ko": "HD현대중공업", "ticker": "329180.KS", "category": "Stocks"},
+    {"en": "Hyundai Steel", "ko": "현대제철", "ticker": "004020.KS", "category": "Stocks"},
+    {"en": "Korea Zinc", "ko": "고려아연", "ticker": "010130.KS", "category": "Stocks"},
+    {"en": "Doosan Enerbility", "ko": "두산에너빌리티", "ticker": "034020.KS", "category": "Stocks"},
+    {"en": "HD Hyundai", "ko": "HD현대", "ticker": "267250.KS", "category": "Stocks"},
+    {"en": "OCI Holdings", "ko": "OCI홀딩스", "ticker": "456040.KS", "category": "Stocks"},
+    {"en": "Kumho Petrochemical", "ko": "금호석유", "ticker": "011780.KS", "category": "Stocks"},
+    # Energy & Chemicals
+    {"en": "S-Oil", "ko": "에스오일", "ticker": "010950.KS", "category": "Stocks"},
+    {"en": "GS Holdings", "ko": "GS홀딩스", "ticker": "078930.KS", "category": "Stocks"},
+    {"en": "Lotte Chemical", "ko": "롯데케미칼", "ticker": "011170.KS", "category": "Stocks"},
+    # Finance & Banking
+    {"en": "KB Financial Group", "ko": "KB금융", "ticker": "105560.KS", "category": "Stocks"},
+    {"en": "Shinhan Financial Group", "ko": "신한지주", "ticker": "055550.KS", "category": "Stocks"},
+    {"en": "Hana Financial Group", "ko": "하나금융지주", "ticker": "086790.KS", "category": "Stocks"},
+    {"en": "Woori Financial Group", "ko": "우리금융지주", "ticker": "316140.KS", "category": "Stocks"},
+    {"en": "Samsung Life Insurance", "ko": "삼성생명", "ticker": "032830.KS", "category": "Stocks"},
+    # Defense & Aerospace
+    {"en": "Hanwha Aerospace", "ko": "한화에어로스페이스", "ticker": "012450.KS", "category": "Stocks"},
+    {"en": "Hanwha Corporation", "ko": "한화", "ticker": "000880.KS", "category": "Stocks"},
+    # Biotech & Pharma
+    {"en": "Samsung Biologics", "ko": "삼성바이오로직스", "ticker": "207940.KS", "category": "Stocks"},
+    {"en": "Celltrion", "ko": "셀트리온", "ticker": "068270.KS", "category": "Stocks"},
+    {"en": "Hanmi Pharm", "ko": "한미약품", "ticker": "128940.KS", "category": "Stocks"},
+    {"en": "Yuhan Corporation", "ko": "유한양행", "ticker": "000100.KS", "category": "Stocks"},
+    {"en": "Daewoong Pharmaceutical", "ko": "대웅제약", "ticker": "069620.KS", "category": "Stocks"},
+    # Consumer & Retail
+    {"en": "Amorepacific", "ko": "아모레퍼시픽", "ticker": "090430.KS", "category": "Stocks"},
+    {"en": "LG H&H", "ko": "LG생활건강", "ticker": "051900.KS", "category": "Stocks"},
+    {"en": "CJ CheilJedang", "ko": "CJ제일제당", "ticker": "097950.KS", "category": "Stocks"},
+    {"en": "Nongshim", "ko": "농심", "ticker": "004370.KS", "category": "Stocks"},
+    {"en": "Ottogi", "ko": "오뚜기", "ticker": "007310.KS", "category": "Stocks"},
+    {"en": "KT&G", "ko": "KT&G", "ticker": "033780.KS", "category": "Stocks"},
+    {"en": "Lotte Shopping", "ko": "롯데쇼핑", "ticker": "023530.KS", "category": "Stocks"},
+    {"en": "Hotel Shilla", "ko": "호텔신라", "ticker": "008770.KS", "category": "Stocks"},
+    {"en": "Hyundai Department Store", "ko": "현대백화점", "ticker": "069960.KS", "category": "Stocks"},
+    # Conglomerates
+    {"en": "Samsung C&T", "ko": "삼성물산", "ticker": "028260.KS", "category": "Stocks"},
+    {"en": "SK Inc", "ko": "SK㈜", "ticker": "034730.KS", "category": "Stocks"},
+    {"en": "LG Corporation", "ko": "LG", "ticker": "003550.KS", "category": "Stocks"},
+    {"en": "Lotte Holdings", "ko": "롯데지주", "ticker": "004990.KS", "category": "Stocks"},
+    # Utilities & Energy
+    {"en": "Korea Electric Power", "ko": "한국전력", "ticker": "015760.KS", "category": "Stocks"},
+    # Shipbuilding
+    {"en": "Samsung Heavy Industries", "ko": "삼성중공업", "ticker": "010140.KS", "category": "Stocks"},
+    {"en": "Hyundai Mipo Dockyard", "ko": "현대미포조선", "ticker": "010620.KS", "category": "Stocks"},
+    # GS Retail
+    {"en": "GS Retail", "ko": "GS리테일", "ticker": "007070.KS", "category": "Stocks"},
+    # Doosan
+    {"en": "Doosan Bobcat", "ko": "두산밥캣", "ticker": "241560.KS", "category": "Stocks"},
 ]
 
 
@@ -74,27 +132,28 @@ CONTENT:
     return {"title": title, "tags": tags, "content": content}
 
 
-def fetch_unsplash_image(query: str) -> dict | None:
+def fetch_unsplash_images(query: str, count: int = 3) -> list:
     res = requests.get(
         "https://api.unsplash.com/search/photos",
-        params={"query": query, "per_page": 1, "orientation": "landscape"},
+        params={"query": query, "per_page": count, "orientation": "landscape"},
         headers={"Authorization": f"Client-ID {UNSPLASH_ACCESS_KEY}"},
     )
-    print(f"Unsplash status: {res.status_code}, body: {res.text[:200]}")
     if res.status_code != 200 or not res.json()["results"]:
-        return None
-    photo = res.json()["results"][0]
-    return {
-        "url": photo["urls"]["regular"],
-        "alt": photo["alt_description"] or query,
-        "photographer": photo["user"]["name"],
-    }
+        return []
+    return [
+        {
+            "url": photo["urls"]["regular"],
+            "alt": photo["alt_description"] or query,
+            "photographer": photo["user"]["name"],
+        }
+        for photo in res.json()["results"]
+    ]
 
 
-def upload_image_to_wp(image: dict, title: str) -> int | None:
-    img_data = requests.get(image["url"]).content
+def upload_image_to_wp(image: dict, title: str, suffix: str = "") -> dict | None:
     import re
-    filename = re.sub(r"[^a-z0-9-]", "", title.lower().replace(" ", "-"))[:50] + ".jpg"
+    img_data = requests.get(image["url"]).content
+    filename = re.sub(r"[^a-z0-9-]", "", title.lower().replace(" ", "-"))[:40] + suffix + ".jpg"
     res = requests.post(
         "https://stockithub.com/wp-json/wp/v2/media",
         auth=(WP_USERNAME, WP_APP_PASSWORD),
@@ -103,13 +162,13 @@ def upload_image_to_wp(image: dict, title: str) -> int | None:
     )
     if res.status_code == 201:
         media_id = res.json()["id"]
-        # Set alt text
+        media_url = res.json()["source_url"]
         requests.post(
             f"https://stockithub.com/wp-json/wp/v2/media/{media_id}",
             auth=(WP_USERNAME, WP_APP_PASSWORD),
             json={"alt_text": image["alt"]},
         )
-        return media_id
+        return {"id": media_id, "url": media_url, "alt": image["alt"], "photographer": image["photographer"]}
     return None
 
 
@@ -135,24 +194,77 @@ def get_or_create_tags(tag_names: list) -> list:
     return tag_ids
 
 
-def publish_post(post: dict, topic: str):
+def get_or_create_category(name: str) -> int | None:
+    res = requests.post(
+        "https://stockithub.com/wp-json/wp/v2/categories",
+        auth=(WP_USERNAME, WP_APP_PASSWORD),
+        json={"name": name},
+    )
+    if res.status_code == 201:
+        return res.json()["id"]
+    elif res.status_code == 400:
+        search = requests.get(
+            "https://stockithub.com/wp-json/wp/v2/categories",
+            params={"search": name},
+            auth=(WP_USERNAME, WP_APP_PASSWORD),
+        )
+        if search.json():
+            return search.json()[0]["id"]
+    return None
+
+
+def inject_images_into_content(content: str, media_list: list) -> str:
+    # Insert images before each <h2> tag (up to len(media_list) times)
+    for i, media in enumerate(media_list):
+        img_html = (
+            f'<figure class="wp-block-image">'
+            f'<img src="{media["url"]}" alt="{media["alt"]}" />'
+            f'<figcaption>Photo by {media["photographer"]} on Unsplash</figcaption>'
+            f'</figure>'
+        )
+        # Find the (i+1)-th <h2>
+        pos = -1
+        for _ in range(i + 1):
+            pos = content.find("<h2>", pos + 1)
+            if pos == -1:
+                break
+        if pos != -1:
+            content = content[:pos] + img_html + content[pos:]
+    return content
+
+
+def publish_post(post: dict, topic: dict):
     tag_ids = get_or_create_tags(post["tags"])
 
-    # Fetch and upload thumbnail
-    image = fetch_unsplash_image(topic["en"])
-    featured_media = None
-    if image:
-        featured_media = upload_image_to_wp(image, post["title"])
-        print(f"Thumbnail: {image['url']} (by {image['photographer']})")
+    # Fetch images from Unsplash
+    images = fetch_unsplash_images(topic["en"], count=3)
+    featured_media_id = None
+    content = post["content"]
+
+    if images:
+        uploaded = []
+        for i, img in enumerate(images):
+            media = upload_image_to_wp(img, post["title"], suffix=f"-{i+1}")
+            if media:
+                uploaded.append(media)
+                print(f"Image {i+1}: {media['url']} (by {media['photographer']})")
+
+        if uploaded:
+            featured_media_id = uploaded[0]["id"]
+            # Inject images into body (skip first, use rest)
+            content = inject_images_into_content(content, uploaded[1:])
+
+    category_id = get_or_create_category(topic["category"])
 
     payload = {
         "title": post["title"],
-        "content": post["content"],
+        "content": content,
         "status": "publish",
         "tags": tag_ids,
+        "categories": [category_id] if category_id else [],
     }
-    if featured_media:
-        payload["featured_media"] = featured_media
+    if featured_media_id:
+        payload["featured_media"] = featured_media_id
 
     res = requests.post(WP_URL, auth=(WP_USERNAME, WP_APP_PASSWORD), json=payload)
     res.raise_for_status()
@@ -160,8 +272,9 @@ def publish_post(post: dict, topic: str):
 
 
 if __name__ == "__main__":
-    topic = random.choice(TOPICS)
-    print(f"[{datetime.now()}] Topic: {topic['en']} ({topic['ko']})")
+    index = (datetime.now().timetuple().tm_yday - 1) % len(TOPICS)
+    topic = TOPICS[index]
+    print(f"[{datetime.now()}] Topic #{index}: {topic['en']} ({topic['ko']})")
 
     post = generate_post(topic)
     print(f"Title: {post['title']}")
