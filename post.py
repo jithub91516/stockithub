@@ -1,7 +1,7 @@
 import os
-import random
 import requests
 import anthropic
+import yfinance as yf
 from datetime import datetime
 
 # --- Config ---
@@ -12,8 +12,15 @@ WP_APP_PASSWORD = os.environ["WP_APP_PASSWORD"]
 UNSPLASH_ACCESS_KEY = os.environ["UNSPLASH_ACCESS_KEY"]
 
 TOPICS = [
-    # Semiconductors & Tech
-    {"en": "SK Hynix", "ko": "SK하이닉스", "ticker": "000660.KS", "category": "Tech", "image_query": "semiconductor"},
+    # Semiconductors & Chip (우선순위 최상위)
+    {"en": "Samsung Electronics", "ko": "삼성전자", "ticker": "005930.KS", "category": "Tech", "image_query": "semiconductor chip"},
+    {"en": "SK Hynix", "ko": "SK하이닉스", "ticker": "000660.KS", "category": "Tech", "image_query": "memory chip"},
+    {"en": "DB HiTek", "ko": "DB하이텍", "ticker": "000990.KS", "category": "Tech", "image_query": "microchip wafer"},
+    {"en": "Hanmi Semiconductor", "ko": "한미반도체", "ticker": "042700.KS", "category": "Tech", "image_query": "semiconductor equipment"},
+    {"en": "HPSP", "ko": "HPSP", "ticker": "403870.KS", "category": "Tech", "image_query": "semiconductor manufacturing"},
+    {"en": "Leeno Industrial", "ko": "리노공업", "ticker": "058470.KS", "category": "Tech", "image_query": "semiconductor test"},
+    {"en": "Isu Petasys", "ko": "이수페타시스", "ticker": "007660.KS", "category": "Tech", "image_query": "circuit board"},
+    # Tech & Internet
     {"en": "Kakao", "ko": "카카오", "ticker": "035720.KS", "category": "Tech", "image_query": "mobile technology"},
     {"en": "Naver", "ko": "NAVER", "ticker": "035420.KS", "category": "Tech", "image_query": "internet technology"},
     {"en": "Krafton", "ko": "크래프톤", "ticker": "259960.KS", "category": "Tech", "image_query": "video game"},
@@ -21,19 +28,17 @@ TOPICS = [
     {"en": "SK Telecom", "ko": "SK텔레콤", "ticker": "017670.KS", "category": "Tech", "image_query": "telecommunications"},
     {"en": "KT", "ko": "KT", "ticker": "030200.KS", "category": "Tech", "image_query": "network technology"},
     {"en": "Samsung Engineering", "ko": "삼성엔지니어링", "ticker": "028050.KS", "category": "Tech", "image_query": "construction engineering"},
-    {"en": "DB HiTek", "ko": "DB하이텍", "ticker": "000990.KS", "category": "Tech", "image_query": "microchip"},
     # Battery & EV
-    {"en": "LG Energy Solution", "ko": "LG에너지솔루션", "ticker": "373220.KS", "category": "Stocks", "image_query": "electric vehicle"},
-    {"en": "SK Innovation", "ko": "SK이노베이션", "ticker": "096770.KS", "category": "Stocks", "image_query": "battery"},
+    {"en": "LG Energy Solution", "ko": "LG에너지솔루션", "ticker": "373220.KS", "category": "Stocks", "image_query": "electric vehicle battery"},
+    {"en": "SK Innovation", "ko": "SK이노베이션", "ticker": "096770.KS", "category": "Stocks", "image_query": "battery cell"},
     {"en": "LG Chem", "ko": "LG화학", "ticker": "051910.KS", "category": "Stocks", "image_query": "chemical"},
     {"en": "Hanwha Solutions", "ko": "한화솔루션", "ticker": "009830.KS", "category": "Stocks", "image_query": "solar energy"},
+    {"en": "Samsung SDI", "ko": "삼성SDI", "ticker": "006400.KS", "category": "Stocks", "image_query": "battery"},
     # Automotive
     {"en": "Hyundai Motor", "ko": "현대자동차", "ticker": "005380.KS", "category": "Stocks", "image_query": "automobile"},
     {"en": "Kia Corporation", "ko": "기아", "ticker": "000270.KS", "category": "Stocks", "image_query": "car"},
     {"en": "Hyundai Mobis", "ko": "현대모비스", "ticker": "012330.KS", "category": "Stocks", "image_query": "auto parts"},
     {"en": "Hyundai Glovis", "ko": "현대글로비스", "ticker": "086280.KS", "category": "Stocks", "image_query": "logistics"},
-    {"en": "Samsung Electronics", "ko": "삼성전자", "ticker": "005930.KS", "category": "Tech", "image_query": "smartphone"},
-    {"en": "Samsung SDI", "ko": "삼성SDI", "ticker": "006400.KS", "category": "Stocks", "image_query": "battery"},
     {"en": "Hyundai Rotem", "ko": "현대로템", "ticker": "064350.KS", "category": "Stocks", "image_query": "railway train"},
     # Materials & Heavy Industry
     {"en": "POSCO Holdings", "ko": "POSCO홀딩스", "ticker": "005490.KS", "category": "Stocks", "image_query": "steel factory"},
@@ -90,20 +95,109 @@ TOPICS = [
 ]
 
 
-def generate_post(topic: str) -> dict:
+def fetch_stock_data(ticker: str) -> dict:
+    try:
+        stock = yf.Ticker(ticker)
+        info = stock.info
+        data = {}
+
+        price = info.get("currentPrice") or info.get("regularMarketPrice")
+        if price:
+            data["current_price"] = f"₩{price:,.0f}"
+
+        market_cap = info.get("marketCap")
+        if market_cap:
+            if market_cap >= 1_000_000_000_000:
+                data["market_cap"] = f"₩{market_cap / 1_000_000_000_000:.1f}T"
+            else:
+                data["market_cap"] = f"₩{market_cap / 100_000_000:.0f}B"
+
+        pe = info.get("trailingPE")
+        if pe:
+            data["pe_ratio"] = f"{pe:.1f}x"
+
+        pb = info.get("priceToBook")
+        if pb:
+            data["pb_ratio"] = f"{pb:.2f}x"
+
+        high52 = info.get("fiftyTwoWeekHigh")
+        low52 = info.get("fiftyTwoWeekLow")
+        if high52 and low52:
+            data["52w_range"] = f"₩{low52:,.0f} – ₩{high52:,.0f}"
+            if price and high52:
+                pct_from_high = (price - high52) / high52 * 100
+                data["pct_from_52w_high"] = f"{pct_from_high:+.1f}%"
+
+        div_yield = info.get("dividendYield")
+        if div_yield:
+            data["dividend_yield"] = f"{div_yield * 100:.2f}%"
+
+        revenue = info.get("totalRevenue")
+        if revenue:
+            if revenue >= 1_000_000_000_000:
+                data["revenue_ttm"] = f"₩{revenue / 1_000_000_000_000:.1f}T"
+            else:
+                data["revenue_ttm"] = f"₩{revenue / 100_000_000:.0f}B"
+
+        roe = info.get("returnOnEquity")
+        if roe:
+            data["roe"] = f"{roe * 100:.1f}%"
+
+        return data
+    except Exception as e:
+        print(f"[yfinance] Failed to fetch data for {ticker}: {e}")
+        return {}
+
+
+def format_stock_data_for_prompt(data: dict) -> str:
+    if not data:
+        return "Live market data unavailable at time of writing."
+    lines = []
+    if "current_price" in data:
+        lines.append(f"- Current Price: {data['current_price']}")
+    if "market_cap" in data:
+        lines.append(f"- Market Cap: {data['market_cap']}")
+    if "pe_ratio" in data:
+        lines.append(f"- P/E Ratio: {data['pe_ratio']}")
+    if "pb_ratio" in data:
+        lines.append(f"- P/B Ratio: {data['pb_ratio']}")
+    if "52w_range" in data:
+        lines.append(f"- 52-Week Range: {data['52w_range']}")
+    if "pct_from_52w_high" in data:
+        lines.append(f"- vs. 52-Week High: {data['pct_from_52w_high']}")
+    if "dividend_yield" in data:
+        lines.append(f"- Dividend Yield: {data['dividend_yield']}")
+    if "revenue_ttm" in data:
+        lines.append(f"- Revenue (TTM): {data['revenue_ttm']}")
+    if "roe" in data:
+        lines.append(f"- Return on Equity: {data['roe']}")
+    return "\n".join(lines)
+
+
+def generate_post(topic: dict) -> dict:
     client = anthropic.Anthropic(api_key=ANTHROPIC_API_KEY)
 
-    prompt = f"""Write a high-quality English blog post introducing the following Korean stock for international investors:
+    stock_data = fetch_stock_data(topic["ticker"])
+    stock_data_str = format_stock_data_for_prompt(stock_data)
+    today = datetime.now().strftime("%B %d, %Y")
+
+    prompt = f"""Write a high-quality, data-driven English blog post analyzing the following Korean stock for international investors.
 
 Company: {topic['en']} ({topic['ko']}, {topic['ticker']})
+Date: {today}
+
+Live Market Data (as of today):
+{stock_data_str}
 
 Requirements:
 - Title: SEO-friendly, include both English name and Korean name (e.g. "Samsung Electronics (삼성전자): ...")
-- Length: 800-1200 words
-- Structure: Introduction, 2-3 main sections with subheadings, Conclusion
-- Tone: Informative and accessible for international investors
+- Length: 1200-1600 words
+- Structure: Introduction, 3-4 main sections with <h2> subheadings, Conclusion
+- Tone: Analytical and data-driven, accessible for international investors
 - Always write the company name as: {topic['en']} ({topic['ko']}, {topic['ticker']}) on first mention, then just {topic['en']} afterwards
-- Include business overview, recent performance, and why international investors should pay attention
+- Weave the live market data naturally into the analysis — comment on valuation, price vs. 52-week high/low, dividend attractiveness, etc.
+- Include: business overview, competitive position, key risks, and investment thesis for international investors
+- Use specific numbers from the market data to back up claims
 - End with a brief disclaimer that this is not financial advice
 
 Return your response in exactly this format:
@@ -115,7 +209,7 @@ CONTENT:
 
     message = client.messages.create(
         model="claude-opus-4-6",
-        max_tokens=2048,
+        max_tokens=3000,
         messages=[{"role": "user", "content": prompt}],
     )
 
