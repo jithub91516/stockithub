@@ -1,8 +1,14 @@
 import os
+import re
 import requests
 import anthropic
 import yfinance as yf
-from datetime import datetime
+import matplotlib
+matplotlib.use("Agg")
+import matplotlib.pyplot as plt
+import matplotlib.dates as mdates
+from io import BytesIO
+from datetime import datetime, date
 
 # --- Config ---
 ANTHROPIC_API_KEY = os.environ["ANTHROPIC_API_KEY"]
@@ -244,7 +250,6 @@ def fetch_unsplash_images(query: str, count: int = 3) -> list:
 
 
 def upload_image_to_wp(image: dict, title: str, suffix: str = "") -> dict | None:
-    import re
     img_data = requests.get(image["url"]).content
     filename = re.sub(r"[^a-z0-9-]", "", title.lower().replace(" ", "-"))[:40] + suffix + ".jpg"
     res = requests.post(
@@ -262,6 +267,52 @@ def upload_image_to_wp(image: dict, title: str, suffix: str = "") -> dict | None
             json={"alt_text": image["alt"]},
         )
         return {"id": media_id, "url": media_url, "alt": image["alt"], "photographer": image["photographer"]}
+    return None
+
+
+def generate_stock_chart(ticker: str, company_name: str) -> bytes | None:
+    try:
+        stock = yf.Ticker(ticker)
+        hist = stock.history(period="3mo")
+        if hist.empty:
+            return None
+
+        fig, ax = plt.subplots(figsize=(10, 4))
+        ax.plot(hist.index, hist["Close"], color="#1a73e8", linewidth=2)
+        ax.fill_between(hist.index, hist["Close"], hist["Close"].min(), alpha=0.08, color="#1a73e8")
+        ax.set_title(f"{company_name} – 3-Month Price Chart (KRW)", fontsize=13, fontweight="bold", pad=12)
+        ax.set_ylabel("Price (₩)", fontsize=11)
+        ax.xaxis.set_major_formatter(mdates.DateFormatter("%b %d"))
+        ax.xaxis.set_major_locator(mdates.WeekdayLocator(interval=2))
+        plt.xticks(rotation=30, ha="right", fontsize=9)
+        ax.yaxis.set_major_formatter(plt.FuncFormatter(lambda x, _: f"₩{x:,.0f}"))
+        ax.grid(True, alpha=0.25, linestyle="--")
+        ax.spines["top"].set_visible(False)
+        ax.spines["right"].set_visible(False)
+        plt.tight_layout()
+
+        buf = BytesIO()
+        plt.savefig(buf, format="png", dpi=150, bbox_inches="tight")
+        plt.close(fig)
+        buf.seek(0)
+        return buf.read()
+    except Exception as e:
+        print(f"[chart] Failed for {ticker}: {e}")
+        return None
+
+
+def upload_chart_to_wp(chart_bytes: bytes, ticker: str, title: str) -> dict | None:
+    slug = re.sub(r"[^a-z0-9-]", "", title.lower().replace(" ", "-"))[:40]
+    filename = f"{slug}-chart.png"
+    res = requests.post(
+        "https://stockithub.com/wp-json/wp/v2/media",
+        auth=(WP_USERNAME, WP_APP_PASSWORD),
+        headers={"Content-Disposition": f'attachment; filename="{filename}"', "Content-Type": "image/png"},
+        data=chart_bytes,
+    )
+    if res.status_code == 201:
+        return {"id": res.json()["id"], "url": res.json()["source_url"]}
+    print(f"[chart upload] Failed: {res.status_code} {res.text[:200]}")
     return None
 
 
@@ -347,10 +398,29 @@ def inject_images_into_content(content: str, media_list: list) -> str:
 def publish_post(post: dict, topic: dict):
     tag_ids = get_or_create_tags(post["tags"])
 
+    # Generate and upload stock chart
+    content = post["content"]
+    chart_bytes = generate_stock_chart(topic["ticker"], topic["en"])
+    if chart_bytes:
+        chart_media = upload_chart_to_wp(chart_bytes, topic["ticker"], post["title"])
+        if chart_media:
+            print(f"Chart uploaded: {chart_media['url']}")
+            chart_html = (
+                f'<figure class="wp-block-image">'
+                f'<img src="{chart_media["url"]}" alt="{topic["en"]} 3-month stock price chart" />'
+                f'<figcaption>{topic["en"]} ({topic["ticker"]}) – 3-Month Price Chart. Source: Yahoo Finance</figcaption>'
+                f'</figure>'
+            )
+            # Insert chart before the first <h2>
+            pos = content.find("<h2>")
+            if pos != -1:
+                content = content[:pos] + chart_html + content[pos:]
+            else:
+                content = chart_html + content
+
     # Fetch images from Unsplash
     images = fetch_unsplash_images(topic["image_query"], count=4)
     featured_media_id = None
-    content = post["content"]
 
     if images:
         uploaded = []
@@ -383,7 +453,8 @@ def publish_post(post: dict, topic: dict):
 
 
 if __name__ == "__main__":
-    index = (datetime.now().timetuple().tm_yday - 1) % len(TOPICS)
+    REFERENCE_DATE = date(2026, 4, 24)  # Day 0 = Samsung Electronics
+    index = (date.today() - REFERENCE_DATE).days % len(TOPICS)
     topic = TOPICS[index]
     print(f"[{datetime.now()}] Topic #{index}: {topic['en']} ({topic['ko']})")
 
