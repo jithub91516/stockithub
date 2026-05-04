@@ -18,7 +18,36 @@ WP_APP_PASSWORD = os.environ["WP_APP_PASSWORD"]
 UNSPLASH_ACCESS_KEY = os.environ["UNSPLASH_ACCESS_KEY"]
 
 TOPICS = [
-    # Semiconductors & Chip (우선순위 최상위)
+    # Defense & Aerospace (우선순위 1위 - 검색 트래픽 확인됨)
+    {"en": "Hanwha Aerospace", "ko": "한화에어로스페이스", "ticker": "012450.KS", "category": "Stocks", "image_query": "aerospace defense"},
+    {"en": "Hanwha Systems", "ko": "한화시스템", "ticker": "272210.KS", "category": "Stocks", "image_query": "defense electronics radar"},
+    {"en": "Hanwha Corporation", "ko": "한화", "ticker": "000880.KS", "category": "Stocks", "image_query": "defense industry"},
+    {"en": "Hyundai Rotem", "ko": "현대로템", "ticker": "064350.KS", "category": "Stocks", "image_query": "k2 tank defense military"},
+    {"en": "LIG Nex1", "ko": "LIG넥스원", "ticker": "079550.KS", "category": "Stocks", "image_query": "missile defense weapon"},
+    {"en": "Korea Aerospace Industries", "ko": "한국항공우주", "ticker": "047810.KS", "category": "Stocks", "image_query": "military aircraft fighter jet"},
+    {"en": "Poongsan", "ko": "풍산", "ticker": "103140.KS", "category": "Stocks", "image_query": "ammunition artillery"},
+    # US Defense & Aerospace
+    {"en": "Lockheed Martin", "ko": "", "ticker": "LMT", "category": "Stocks", "image_query": "lockheed martin fighter jet", "currency": "USD"},
+    {"en": "RTX (Raytheon)", "ko": "", "ticker": "RTX", "category": "Stocks", "image_query": "raytheon missile defense", "currency": "USD"},
+    {"en": "Northrop Grumman", "ko": "", "ticker": "NOC", "category": "Stocks", "image_query": "northrop grumman stealth bomber", "currency": "USD"},
+    {"en": "L3Harris Technologies", "ko": "", "ticker": "LHX", "category": "Stocks", "image_query": "defense electronics military", "currency": "USD"},
+    # US Semiconductors
+    {"en": "NVIDIA", "ko": "", "ticker": "NVDA", "category": "Tech", "image_query": "nvidia gpu chip", "currency": "USD"},
+    {"en": "AMD", "ko": "", "ticker": "AMD", "category": "Tech", "image_query": "amd processor chip", "currency": "USD"},
+    {"en": "Intel", "ko": "", "ticker": "INTC", "category": "Tech", "image_query": "intel semiconductor", "currency": "USD"},
+    {"en": "TSMC", "ko": "", "ticker": "TSM", "category": "Tech", "image_query": "tsmc semiconductor wafer", "currency": "USD"},
+    {"en": "Qualcomm", "ko": "", "ticker": "QCOM", "category": "Tech", "image_query": "qualcomm mobile chip", "currency": "USD"},
+    # US Big Tech
+    {"en": "Apple", "ko": "", "ticker": "AAPL", "category": "Tech", "image_query": "apple technology", "currency": "USD"},
+    {"en": "Microsoft", "ko": "", "ticker": "MSFT", "category": "Tech", "image_query": "microsoft technology", "currency": "USD"},
+    {"en": "Alphabet (Google)", "ko": "", "ticker": "GOOGL", "category": "Tech", "image_query": "google technology", "currency": "USD"},
+    {"en": "Meta Platforms", "ko": "", "ticker": "META", "category": "Tech", "image_query": "meta social media", "currency": "USD"},
+    {"en": "Amazon", "ko": "", "ticker": "AMZN", "category": "Tech", "image_query": "amazon cloud ecommerce", "currency": "USD"},
+    # US ETFs
+    {"en": "Invesco QQQ ETF", "ko": "", "ticker": "QQQ", "category": "Stocks", "image_query": "nasdaq technology etf", "currency": "USD"},
+    {"en": "Vanguard S&P 500 ETF (VOO)", "ko": "", "ticker": "VOO", "category": "Stocks", "image_query": "sp500 index fund", "currency": "USD"},
+    {"en": "iShares Semiconductor ETF (SOXX)", "ko": "", "ticker": "SOXX", "category": "Stocks", "image_query": "semiconductor etf chip", "currency": "USD"},
+    # Korean Semiconductors & Chip
     {"en": "Samsung Electronics", "ko": "삼성전자", "ticker": "005930.KS", "category": "Tech", "image_query": "semiconductor chip"},
     {"en": "SK Hynix", "ko": "SK하이닉스", "ticker": "000660.KS", "category": "Tech", "image_query": "memory chip"},
     {"en": "DB HiTek", "ko": "DB하이텍", "ticker": "000990.KS", "category": "Tech", "image_query": "microchip wafer"},
@@ -45,7 +74,6 @@ TOPICS = [
     {"en": "Kia Corporation", "ko": "기아", "ticker": "000270.KS", "category": "Stocks", "image_query": "car"},
     {"en": "Hyundai Mobis", "ko": "현대모비스", "ticker": "012330.KS", "category": "Stocks", "image_query": "auto parts"},
     {"en": "Hyundai Glovis", "ko": "현대글로비스", "ticker": "086280.KS", "category": "Stocks", "image_query": "logistics"},
-    {"en": "Hyundai Rotem", "ko": "현대로템", "ticker": "064350.KS", "category": "Stocks", "image_query": "railway train"},
     # Materials & Heavy Industry
     {"en": "POSCO Holdings", "ko": "POSCO홀딩스", "ticker": "005490.KS", "category": "Stocks", "image_query": "steel factory"},
     {"en": "HD Hyundai Heavy Industries", "ko": "HD현대중공업", "ticker": "329180.KS", "category": "Stocks", "image_query": "shipbuilding"},
@@ -65,9 +93,6 @@ TOPICS = [
     {"en": "Hana Financial Group", "ko": "하나금융지주", "ticker": "086790.KS", "category": "Stocks", "image_query": "investment"},
     {"en": "Woori Financial Group", "ko": "우리금융지주", "ticker": "316140.KS", "category": "Stocks", "image_query": "stock market"},
     {"en": "Samsung Life Insurance", "ko": "삼성생명", "ticker": "032830.KS", "category": "Stocks", "image_query": "insurance"},
-    # Defense & Aerospace
-    {"en": "Hanwha Aerospace", "ko": "한화에어로스페이스", "ticker": "012450.KS", "category": "Stocks", "image_query": "aerospace"},
-    {"en": "Hanwha Corporation", "ko": "한화", "ticker": "000880.KS", "category": "Stocks", "image_query": "defense"},
     # Biotech & Pharma
     {"en": "Samsung Biologics", "ko": "삼성바이오로직스", "ticker": "207940.KS", "category": "Stocks", "image_query": "biotechnology laboratory"},
     {"en": "Celltrion", "ko": "셀트리온", "ticker": "068270.KS", "category": "Stocks", "image_query": "pharmaceutical"},
@@ -101,22 +126,29 @@ TOPICS = [
 ]
 
 
-def fetch_stock_data(ticker: str) -> dict:
+def fetch_stock_data(ticker: str, currency: str = "KRW") -> dict:
     try:
         stock = yf.Ticker(ticker)
         info = stock.info
         data = {}
+        sym = "$" if currency == "USD" else "₩"
 
         price = info.get("currentPrice") or info.get("regularMarketPrice")
         if price:
-            data["current_price"] = f"₩{price:,.0f}"
+            data["current_price"] = f"{sym}{price:,.2f}" if currency == "USD" else f"{sym}{price:,.0f}"
 
         market_cap = info.get("marketCap")
         if market_cap:
-            if market_cap >= 1_000_000_000_000:
-                data["market_cap"] = f"₩{market_cap / 1_000_000_000_000:.1f}T"
+            if currency == "USD":
+                if market_cap >= 1_000_000_000_000:
+                    data["market_cap"] = f"{sym}{market_cap / 1_000_000_000_000:.1f}T"
+                else:
+                    data["market_cap"] = f"{sym}{market_cap / 1_000_000_000:.1f}B"
             else:
-                data["market_cap"] = f"₩{market_cap / 100_000_000:.0f}B"
+                if market_cap >= 1_000_000_000_000:
+                    data["market_cap"] = f"{sym}{market_cap / 1_000_000_000_000:.1f}T"
+                else:
+                    data["market_cap"] = f"{sym}{market_cap / 100_000_000:.0f}B"
 
         pe = info.get("trailingPE")
         if pe:
@@ -129,7 +161,10 @@ def fetch_stock_data(ticker: str) -> dict:
         high52 = info.get("fiftyTwoWeekHigh")
         low52 = info.get("fiftyTwoWeekLow")
         if high52 and low52:
-            data["52w_range"] = f"₩{low52:,.0f} – ₩{high52:,.0f}"
+            if currency == "USD":
+                data["52w_range"] = f"{sym}{low52:,.2f} – {sym}{high52:,.2f}"
+            else:
+                data["52w_range"] = f"{sym}{low52:,.0f} – {sym}{high52:,.0f}"
             if price and high52:
                 pct_from_high = (price - high52) / high52 * 100
                 data["pct_from_52w_high"] = f"{pct_from_high:+.1f}%"
@@ -140,10 +175,16 @@ def fetch_stock_data(ticker: str) -> dict:
 
         revenue = info.get("totalRevenue")
         if revenue:
-            if revenue >= 1_000_000_000_000:
-                data["revenue_ttm"] = f"₩{revenue / 1_000_000_000_000:.1f}T"
+            if currency == "USD":
+                if revenue >= 1_000_000_000_000:
+                    data["revenue_ttm"] = f"{sym}{revenue / 1_000_000_000_000:.1f}T"
+                else:
+                    data["revenue_ttm"] = f"{sym}{revenue / 1_000_000_000:.1f}B"
             else:
-                data["revenue_ttm"] = f"₩{revenue / 100_000_000:.0f}B"
+                if revenue >= 1_000_000_000_000:
+                    data["revenue_ttm"] = f"{sym}{revenue / 1_000_000_000_000:.1f}T"
+                else:
+                    data["revenue_ttm"] = f"{sym}{revenue / 100_000_000:.0f}B"
 
         roe = info.get("returnOnEquity")
         if roe:
@@ -183,24 +224,40 @@ def format_stock_data_for_prompt(data: dict) -> str:
 def generate_post(topic: dict) -> dict:
     client = anthropic.Anthropic(api_key=ANTHROPIC_API_KEY)
 
-    stock_data = fetch_stock_data(topic["ticker"])
+    currency = topic.get("currency", "KRW")
+    stock_data = fetch_stock_data(topic["ticker"], currency)
     stock_data_str = format_stock_data_for_prompt(stock_data)
     today = datetime.now().strftime("%B %d, %Y")
 
-    prompt = f"""Write a high-quality, data-driven English blog post analyzing the following Korean stock for international investors.
+    is_us = currency == "USD"
+    ko = topic.get("ko", "")
+    company_line = f"{topic['en']} ({topic['ticker']})" if is_us or not ko else f"{topic['en']} ({ko}, {topic['ticker']})"
+    stock_origin = "US" if is_us else "Korean"
+    name_instruction = (
+        f"Always write the company name as: {topic['en']} ({topic['ticker']}) on first mention, then just {topic['en']} afterwards"
+        if is_us or not ko else
+        f"Always write the company name as: {topic['en']} ({ko}, {topic['ticker']}) on first mention, then just {topic['en']} afterwards"
+    )
+    title_instruction = (
+        "Title: SEO-friendly, concise, include the ticker (e.g. 'NVIDIA (NVDA): ...')"
+        if is_us or not ko else
+        "Title: SEO-friendly, include both English name and Korean name (e.g. 'Samsung Electronics (삼성전자): ...')"
+    )
 
-Company: {topic['en']} ({topic['ko']}, {topic['ticker']})
+    prompt = f"""Write a high-quality, data-driven English blog post analyzing the following {stock_origin} stock for international investors.
+
+Company: {company_line}
 Date: {today}
 
 Live Market Data (as of today):
 {stock_data_str}
 
 Requirements:
-- Title: SEO-friendly, include both English name and Korean name (e.g. "Samsung Electronics (삼성전자): ...")
+- {title_instruction}
 - Length: 1200-1600 words
 - Structure: Introduction, 3-4 main sections with <h2> subheadings, Conclusion
 - Tone: Analytical and data-driven, accessible for international investors
-- Always write the company name as: {topic['en']} ({topic['ko']}, {topic['ticker']}) on first mention, then just {topic['en']} afterwards
+- {name_instruction}
 - Weave the live market data naturally into the analysis — comment on valuation, price vs. 52-week high/low, dividend attractiveness, etc.
 - Include: business overview, competitive position, key risks, and investment thesis for international investors
 - Use specific numbers from the market data to back up claims
@@ -270,22 +327,25 @@ def upload_image_to_wp(image: dict, title: str, suffix: str = "") -> dict | None
     return None
 
 
-def generate_stock_chart(ticker: str, company_name: str) -> bytes | None:
+def generate_stock_chart(ticker: str, company_name: str, currency: str = "KRW") -> bytes | None:
     try:
         stock = yf.Ticker(ticker)
         hist = stock.history(period="3mo")
         if hist.empty:
             return None
 
+        sym = "$" if currency == "USD" else "₩"
+        price_fmt = (lambda x, _: f"{sym}{x:,.2f}") if currency == "USD" else (lambda x, _: f"{sym}{x:,.0f}")
+
         fig, ax = plt.subplots(figsize=(10, 4))
         ax.plot(hist.index, hist["Close"], color="#1a73e8", linewidth=2)
         ax.fill_between(hist.index, hist["Close"], hist["Close"].min(), alpha=0.08, color="#1a73e8")
-        ax.set_title(f"{company_name} – 3-Month Price Chart (KRW)", fontsize=13, fontweight="bold", pad=12)
-        ax.set_ylabel("Price (₩)", fontsize=11)
+        ax.set_title(f"{company_name} – 3-Month Price Chart ({currency})", fontsize=13, fontweight="bold", pad=12)
+        ax.set_ylabel(f"Price ({sym})", fontsize=11)
         ax.xaxis.set_major_formatter(mdates.DateFormatter("%b %d"))
         ax.xaxis.set_major_locator(mdates.WeekdayLocator(interval=2))
         plt.xticks(rotation=30, ha="right", fontsize=9)
-        ax.yaxis.set_major_formatter(plt.FuncFormatter(lambda x, _: f"₩{x:,.0f}"))
+        ax.yaxis.set_major_formatter(plt.FuncFormatter(price_fmt))
         ax.grid(True, alpha=0.25, linestyle="--")
         ax.spines["top"].set_visible(False)
         ax.spines["right"].set_visible(False)
@@ -400,7 +460,7 @@ def publish_post(post: dict, topic: dict):
 
     # Generate and upload stock chart
     content = post["content"]
-    chart_bytes = generate_stock_chart(topic["ticker"], topic["en"])
+    chart_bytes = generate_stock_chart(topic["ticker"], topic["en"], topic.get("currency", "KRW"))
     if chart_bytes:
         chart_media = upload_chart_to_wp(chart_bytes, topic["ticker"], post["title"])
         if chart_media:
@@ -453,7 +513,7 @@ def publish_post(post: dict, topic: dict):
 
 
 if __name__ == "__main__":
-    REFERENCE_DATE = date(2026, 4, 24)  # Day 0 = Samsung Electronics
+    REFERENCE_DATE = date(2026, 5, 5)  # Day 0 = Hanwha Aerospace (defense first)
     index = (date.today() - REFERENCE_DATE).days % len(TOPICS)
     topic = TOPICS[index]
     print(f"[{datetime.now()}] Topic #{index}: {topic['en']} ({topic['ko']})")
